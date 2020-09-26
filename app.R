@@ -1,16 +1,9 @@
-##ShinyApp:PopQuiz
-
 library(shiny)
 
-minVal = 1
-maxVal = 10
-cvp = c("D", "C", "A", "A", "B", "D", "B", "A", "C", "C")
-
 ui <- fluidPage(
-  titlePanel("PopQuiz: Ankaralý Olmak"),
-  strong(em("Açýklama: Toplam 10 adet çoktan seçmeli soru göreceksiniz. 
-     Yanýtlarýnýzý, sað taraftaki menüden seçerek iþaretleyebilirsiniz."
-     )),
+  titlePanel("PopQuiz: Ankaralı Olmak"),
+  strong(em("Açıklama: Toplam 10 adet çoktan seçmeli soru göreceksiniz. 
+     Yanıtlarınızı, sağ taraftaki menüden seçerek işaretleyebilirsiniz.")),
   hr(),
 
   tabsetPanel(type = "pills",
@@ -104,7 +97,7 @@ ui <- fluidPage(
 
           column(2,
             br(),
-            actionButton("renew", strong("Yeniden baþlat"), 
+            actionButton("renew", strong("Yeniden başlat"), 
               class = "btn-secondary"),
             hr()
           )
@@ -136,6 +129,10 @@ ui <- fluidPage(
 
 
 server <- function(input, output, session){
+  
+  minVal = 1
+  maxVal = 10
+  cvp = c("D", "C", "A", "A", "B", "D", "B", "A", "C", "C")
 
   val <- reactiveValues(i = 0)
 
@@ -193,9 +190,9 @@ server <- function(input, output, session){
   
   observeEvent(input$submit, {
     showModal(modalDialog(
-      title = strong("Testi tamamladýnýz!"),
-      strong(em("Sonuçlarýnýzý sol-üstte 'Sonucunuz' panelinden görebilirsiniz.")),
-      footer = tagList( modalButton(strong("Tamam")) ), 
+      title = strong("Testi tamamladınız!"),
+      strong(em("Sonuçlarınızı sol-üstte 'Sonucunuz' panelinden görebilirsiniz.")),
+      footer = tagList( modalButton(strong("Tamam"))), 
       size = "s"
     ))
    })
@@ -204,17 +201,17 @@ server <- function(input, output, session){
   observe({
     input$submit
     isolate({
-    ch <- c("A", "B", "C", "D", "Boþ")
+    ch <- c("A", "B", "C", "D", "Boş")
     answers <- c("1" = ch[as.numeric(input$rb1)], "2" = ch[as.numeric(input$rb2)], 
         "3" = ch[as.numeric(input$rb3)], "4" = ch[as.numeric(input$rb4)], 
         "5" = ch[as.numeric(input$rb5)], "6" = ch[as.numeric(input$rb6)], 
         "7" = ch[as.numeric(input$rb7)], "8" = ch[as.numeric(input$rb8)], 
         "9" = ch[as.numeric(input$rb9)], "10" = ch[as.numeric(input$rb10)])
-    data1 <- data.frame("Soru" = names(answers), "Yanýtýnýz" = answers)
+    data1 <- data.frame("Soru" = names(answers), "Yanıtınız" = answers)
       
     bs <- setdiff(as.character(1:maxVal), names(answers))
-    yt <- rep("Boþ", length(bs))
-    data2 <- data.frame("Soru" = bs, "Yanýtýnýz" = yt)
+    yt <- rep("Boş", length(bs))
+    data2 <- data.frame("Soru" = bs, "Yanıtınız" = yt)
 
     data <- rbind(data1, data2)
     data$Soru <- as.integer(data$Soru)
@@ -222,9 +219,9 @@ server <- function(input, output, session){
 
     sonuç <- character()
     for(i in 1:maxVal){
-      if(cvp[i] == data[,2][i]){ sonuç[i] <- "Doðru"
-      } else if(data[,2][i] == "Boþ"){ sonuç[i] <- "Boþ"
-      } else{ sonuç[i] <- "Yanlýþ"}
+      if(cvp[i] == data[,2][i]){ sonuç[i] <- "Doğru"
+      } else if(data[,2][i] == "Boş"){ sonuç[i] <- "Boş"
+      } else{ sonuç[i] <- "Yanlış"}
     }
     data$Sonuç <- sonuç
     })
@@ -239,9 +236,9 @@ server <- function(input, output, session){
 
   ist <- reactiveValues(d = NULL, y = NULL, b = NULL, not = NULL)
   observeEvent(input$submit,{
-      ist$d <- sum(rd$df$Sonuç == "Doðru")
-      ist$y <- sum(rd$df$Sonuç == "Yanlýþ")
-      ist$b <- sum(rd$df$Sonuç == "Boþ")
+      ist$d <- sum(rd$df$Sonuç == "Doğru")
+      ist$y <- sum(rd$df$Sonuç == "Yanlış")
+      ist$b <- sum(rd$df$Sonuç == "Boş")
       ist$not <- round(ist$d / (ist$d + ist$y + ist$b) * 100)
   })
 
@@ -249,8 +246,8 @@ server <- function(input, output, session){
     input$submit
     isolate({
       if(input$submit == FALSE){paste("SONUÇ:...")
-      } else{paste("SONUÇ:", ist$d, "doðru yanýtýnýz,", ist$y, "yanlýþ yanýtýnýz var.", 
-          ist$b, "soruyu iþaretlemediniz. Notunuz 100 üzerinden", ist$not)}   
+      } else{paste("SONUÇ:", ist$d, "doğru yanıtınız,", ist$y, "yanlış yanıtınız var.", 
+          ist$b, "soruyu işaretlemediniz. Notunuz 100 üzerinden", ist$not)}   
     })
   })
 
@@ -258,12 +255,12 @@ server <- function(input, output, session){
     input$submit
     isolate({
       if(input$submit == FALSE){"YORUM:..."  
-      } else if(ist$not >= 90) {"YORUM: Angaralýsýnýz"
-      } else if(ist$not >= 80 & ist$not < 90) {"YORUM: Angaralý olmasa da Ankaralýsýnýz diyebiliriz."
-      } else if(ist$not >= 60 & ist$not < 80) {"YORUM: Hafiften bir Ankara'yý zamanla sevdim durumu var gibi."
-      } else if(ist$not >= 40 & ist$not < 60) {"YORUM: Ankara'ya geçerken yolunuz düþmüþ gibi, ha Ankara ha baþka bir þehir, farketmez modundasýnýz sanki."
-      } else if(ist$not >= 20 & ist$not < 40) {"YORUM: Fýrsatýný bulursam baþka þehre giderim modundasýnýz gibi."
-      } else {"YORUM: Ankara denilince biraz içi sýkýlýp Ýzmir ya da Ýstanbul aklýna gelenlerdensiniz gibi."} 
+      } else if(ist$not >= 90) {"YORUM: Angaralısınız"
+      } else if(ist$not >= 80 & ist$not < 90) {"YORUM: Angaralı olmasa da Ankaralısınız diyebiliriz."
+      } else if(ist$not >= 60 & ist$not < 80) {"YORUM: Hafiften bir Ankara'yı zamanla sevdim durumu var gibi."
+      } else if(ist$not >= 40 & ist$not < 60) {"YORUM: Ankara'ya geçerken yolunuz düşmüş gibi, ha Ankara ha başka bir şehir, farketmez modundasınız sanki."
+      } else if(ist$not >= 20 & ist$not < 40) {"YORUM: Fırsatını bulursam başka şehre giderim modundasınız gibi."
+      } else {"YORUM: Ankara denilince biraz içi sıkılıp İzmir ya da İstanbul aklına gelenlerdensiniz gibi."} 
     })
   }) 
 
