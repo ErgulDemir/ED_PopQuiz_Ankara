@@ -7,9 +7,9 @@ maxVal = 10
 cvp = c("D", "C", "A", "A", "B", "D", "B", "A", "C", "C")
 
 ui <- fluidPage(
-  titlePanel("PopQuiz: Ankaralý Olmak"),
-  strong(em("Açýklama: Toplam 10 adet çoktan seçmeli soru göreceksiniz. 
-     Yanýtlarýnýzý, sað taraftaki menüden seçerek iþaretleyebilirsiniz."
+  titlePanel("PopQuiz: AnkaralÃ½ Olmak"),
+  strong(em("AÃ§Ã½klama: Toplam 10 adet Ã§oktan seÃ§meli soru gÃ¶receksiniz. 
+     YanÃ½tlarÃ½nÃ½zÃ½, saÃ° taraftaki menÃ¼den seÃ§erek iÃ¾aretleyebilirsiniz."
      )),
   hr(),
 
@@ -63,7 +63,7 @@ ui <- fluidPage(
 
           column(2,
             br(),
-            actionButton("turn", strong("< Önceki soru"), 
+            actionButton("turn", strong("< Ã–nceki soru"), 
                 class = "btn-primary"),
             hr()
           ),
@@ -81,7 +81,7 @@ ui <- fluidPage(
             ),
 
             br(),
-            selectInput("quest", h4("Soru seç :"), choices = list(
+            selectInput("quest", h4("Soru seÃ§ :"), choices = list(
               "Soru 1" = 1, "Soru 2" = 2, "Soru 3" = 3, "Soru 4" = 4,
               "Soru 5" = 5, "Soru 6" = 6, "Soru 7" = 7, "Soru 8" = 8,
               "Soru 9" = 9, "Soru 10" = 10)),
@@ -104,7 +104,7 @@ ui <- fluidPage(
 
           column(2,
             br(),
-            actionButton("renew", strong("Yeniden baþlat"), 
+            actionButton("renew", strong("Yeniden baÃ¾lat"), 
               class = "btn-secondary"),
             hr()
           )
@@ -165,7 +165,7 @@ server <- function(input, output, session){
   observe({
     input$go
     isolate({ 
-      updateSelectInput(session, "quest", "Soru seç :", choices = list(
+      updateSelectInput(session, "quest", "Soru seÃ§ :", choices = list(
               "Soru 1" = 1, "Soru 2" = 2, "Soru 3" = 3, "Soru 4" = 4,
               "Soru 5" = 5, "Soru 6" = 6, "Soru 7" = 7, "Soru 8" = 8,
               "Soru 9" = 9, "Soru 10" = 10), selected = val$i)
@@ -175,7 +175,7 @@ server <- function(input, output, session){
   observe({
     input$turn
     isolate({ 
-      updateSelectInput(session, "quest", "Soru seç :", choices = list(
+      updateSelectInput(session, "quest", "Soru seÃ§ :", choices = list(
               "Soru 1" = 1, "Soru 2" = 2, "Soru 3" = 3, "Soru 4" = 4,
               "Soru 5" = 5, "Soru 6" = 6, "Soru 7" = 7, "Soru 8" = 8,
               "Soru 9" = 9, "Soru 10" = 10), selected = val$i)
@@ -187,14 +187,14 @@ server <- function(input, output, session){
   }) 
 
   output$image <- renderImage({
-    file <- paste0("ank_", val$i, ".JPG")
+    file <- paste0("/www/ank_", val$i, ".JPG")
     outputArgs = list(src = file)
   }, deleteFile = FALSE)
   
   observeEvent(input$submit, {
     showModal(modalDialog(
-      title = strong("Testi tamamladýnýz!"),
-      strong(em("Sonuçlarýnýzý sol-üstte 'Sonucunuz' panelinden görebilirsiniz.")),
+      title = strong("Testi tamamladÃ½nÃ½z!"),
+      strong(em("SonuÃ§larÃ½nÃ½zÃ½ sol-Ã¼stte 'Sonucunuz' panelinden gÃ¶rebilirsiniz.")),
       footer = tagList( modalButton(strong("Tamam")) ), 
       size = "s"
     ))
@@ -204,29 +204,29 @@ server <- function(input, output, session){
   observe({
     input$submit
     isolate({
-    ch <- c("A", "B", "C", "D", "Boþ")
+    ch <- c("A", "B", "C", "D", "BoÃ¾")
     answers <- c("1" = ch[as.numeric(input$rb1)], "2" = ch[as.numeric(input$rb2)], 
         "3" = ch[as.numeric(input$rb3)], "4" = ch[as.numeric(input$rb4)], 
         "5" = ch[as.numeric(input$rb5)], "6" = ch[as.numeric(input$rb6)], 
         "7" = ch[as.numeric(input$rb7)], "8" = ch[as.numeric(input$rb8)], 
         "9" = ch[as.numeric(input$rb9)], "10" = ch[as.numeric(input$rb10)])
-    data1 <- data.frame("Soru" = names(answers), "Yanýtýnýz" = answers)
+    data1 <- data.frame("Soru" = names(answers), "YanÃ½tÃ½nÃ½z" = answers)
       
     bs <- setdiff(as.character(1:maxVal), names(answers))
-    yt <- rep("Boþ", length(bs))
-    data2 <- data.frame("Soru" = bs, "Yanýtýnýz" = yt)
+    yt <- rep("BoÃ¾", length(bs))
+    data2 <- data.frame("Soru" = bs, "YanÃ½tÃ½nÃ½z" = yt)
 
     data <- rbind(data1, data2)
     data$Soru <- as.integer(data$Soru)
     data <- data[order(data$Soru),]
 
-    sonuç <- character()
+    sonuÃ§ <- character()
     for(i in 1:maxVal){
-      if(cvp[i] == data[,2][i]){ sonuç[i] <- "Doðru"
-      } else if(data[,2][i] == "Boþ"){ sonuç[i] <- "Boþ"
-      } else{ sonuç[i] <- "Yanlýþ"}
+      if(cvp[i] == data[,2][i]){ sonuÃ§[i] <- "DoÃ°ru"
+      } else if(data[,2][i] == "BoÃ¾"){ sonuÃ§[i] <- "BoÃ¾"
+      } else{ sonuÃ§[i] <- "YanlÃ½Ã¾"}
     }
-    data$Sonuç <- sonuç
+    data$SonuÃ§ <- sonuÃ§
     })
     rd$df <- data
   })
@@ -239,18 +239,18 @@ server <- function(input, output, session){
 
   ist <- reactiveValues(d = NULL, y = NULL, b = NULL, not = NULL)
   observeEvent(input$submit,{
-      ist$d <- sum(rd$df$Sonuç == "Doðru")
-      ist$y <- sum(rd$df$Sonuç == "Yanlýþ")
-      ist$b <- sum(rd$df$Sonuç == "Boþ")
+      ist$d <- sum(rd$df$SonuÃ§ == "DoÃ°ru")
+      ist$y <- sum(rd$df$SonuÃ§ == "YanlÃ½Ã¾")
+      ist$b <- sum(rd$df$SonuÃ§ == "BoÃ¾")
       ist$not <- round(ist$d / (ist$d + ist$y + ist$b) * 100)
   })
 
   output$yorum <- renderText({
     input$submit
     isolate({
-      if(input$submit == FALSE){paste("SONUÇ:...")
-      } else{paste("SONUÇ:", ist$d, "doðru yanýtýnýz,", ist$y, "yanlýþ yanýtýnýz var.", 
-          ist$b, "soruyu iþaretlemediniz. Notunuz 100 üzerinden", ist$not)}   
+      if(input$submit == FALSE){paste("SONUÃ‡:...")
+      } else{paste("SONUÃ‡:", ist$d, "doÃ°ru yanÃ½tÃ½nÃ½z,", ist$y, "yanlÃ½Ã¾ yanÃ½tÃ½nÃ½z var.", 
+          ist$b, "soruyu iÃ¾aretlemediniz. Notunuz 100 Ã¼zerinden", ist$not)}   
     })
   })
 
@@ -258,12 +258,12 @@ server <- function(input, output, session){
     input$submit
     isolate({
       if(input$submit == FALSE){"YORUM:..."  
-      } else if(ist$not >= 90) {"YORUM: Angaralýsýnýz"
-      } else if(ist$not >= 80 & ist$not < 90) {"YORUM: Angaralý olmasa da Ankaralýsýnýz diyebiliriz."
-      } else if(ist$not >= 60 & ist$not < 80) {"YORUM: Hafiften bir Ankara'yý zamanla sevdim durumu var gibi."
-      } else if(ist$not >= 40 & ist$not < 60) {"YORUM: Ankara'ya geçerken yolunuz düþmüþ gibi, ha Ankara ha baþka bir þehir, farketmez modundasýnýz sanki."
-      } else if(ist$not >= 20 & ist$not < 40) {"YORUM: Fýrsatýný bulursam baþka þehre giderim modundasýnýz gibi."
-      } else {"YORUM: Ankara denilince biraz içi sýkýlýp Ýzmir ya da Ýstanbul aklýna gelenlerdensiniz gibi."} 
+      } else if(ist$not >= 90) {"YORUM: AngaralÃ½sÃ½nÃ½z"
+      } else if(ist$not >= 80 & ist$not < 90) {"YORUM: AngaralÃ½ olmasa da AnkaralÃ½sÃ½nÃ½z diyebiliriz."
+      } else if(ist$not >= 60 & ist$not < 80) {"YORUM: Hafiften bir Ankara'yÃ½ zamanla sevdim durumu var gibi."
+      } else if(ist$not >= 40 & ist$not < 60) {"YORUM: Ankara'ya geÃ§erken yolunuz dÃ¼Ã¾mÃ¼Ã¾ gibi, ha Ankara ha baÃ¾ka bir Ã¾ehir, farketmez modundasÃ½nÃ½z sanki."
+      } else if(ist$not >= 20 & ist$not < 40) {"YORUM: FÃ½rsatÃ½nÃ½ bulursam baÃ¾ka Ã¾ehre giderim modundasÃ½nÃ½z gibi."
+      } else {"YORUM: Ankara denilince biraz iÃ§i sÃ½kÃ½lÃ½p Ãzmir ya da Ãstanbul aklÃ½na gelenlerdensiniz gibi."} 
     })
   }) 
 
