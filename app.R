@@ -184,7 +184,7 @@ server <- function(input, output, session){
   }) 
 
   output$image <- renderImage({
-    file <- paste0("ank_", val$i, ".JPG")
+    file <- paste0("www/ank_", val$i, ".JPG")
     outputArgs = list(src = file)
   }, deleteFile = FALSE)
   
