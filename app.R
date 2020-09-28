@@ -25,9 +25,12 @@ ui <- fluidPage(
         ),
 
         column(3, 
+         hr(),
+          textInput("ad", label = strong("Ad/Soyad :")),
+          passwordInput("kod", label = strong("Kullanıcı kodu :")),
+          hr(),
           h4(strong("YANIT ANAHTARI")),
           h4(
-            hr(),
             radioButtons("rb1", "1 :", c("A"=1, "B"=2, "C"=3, "D"=4), 
               selected = FALSE, inline = TRUE),
             radioButtons("rb2", "2 :", c("A"=1, "B"=2, "C"=3, "D"=4), 
@@ -47,7 +50,8 @@ ui <- fluidPage(
             radioButtons("rb9", "9 :", c("A"=1, "B"=2, "C"=3, "D"=4), 
               selected = FALSE, inline = TRUE),
             radioButtons("rb10", "10 :", c("A"=1, "B"=2, "C"=3, "D"=4), 
-              selected = FALSE, inline = TRUE)
+              selected = FALSE, inline = TRUE),
+            hr()
             )
           )
         ),
@@ -266,6 +270,18 @@ server <- function(input, output, session){
 
   observeEvent(input$renew,{
       session$reload()
+  })
+      
+  observeEvent(input$submit, {
+    ynt <- rd$df[,2]
+    anchor <- readRDS("resultsData.rds")
+    newdata <<- rbind(anchor, data.frame(
+                                   times=Sys.time(), adı = input$ad,
+                                   kod = input$kod, s1=ynt[1], 
+                                   s2=ynt[2], s3=ynt[3], s4=ynt[4], 
+                                   s5=ynt[5], s6=ynt[6], s7=ynt[7], 
+                                   s8=ynt[8], s9=ynt[9], s10=ynt[10]))
+    saveRDS(newdata, "resultsData.rds")
   })
 
 }
