@@ -281,7 +281,7 @@ server <- function(input, output, session){
                                    s2=ynt[2], s3=ynt[3], s4=ynt[4], 
                                    s5=ynt[5], s6=ynt[6], s7=ynt[7], 
                                    s8=ynt[8], s9=ynt[9], s10=ynt[10]))
-    saveRDS(newdata, "https://github.com//ErgulDemir//ED_PopQuiz_Ankara//blob//master//resultsData.rds")
+    saveRDS(newdata, "/blob/master/resultsData.rds")
   })
 
 }
