@@ -274,7 +274,7 @@ server <- function(input, output, session){
       
   observeEvent(input$submit, {
     ynt <- rd$df[,2]
-    anchor <- readRDS(gzcon(url("resultsData.rds")))
+    anchor <- readRDS(gzcon(url("https://github.com/ErgulDemir/ED_PopQuiz_Ankara/raw/master/resultsData.rds")))
     newdata <<- rbind(anchor, data.frame(
                                    times=Sys.time(), adı = input$ad,
                                    kod = input$kod, s1=ynt[1], 
